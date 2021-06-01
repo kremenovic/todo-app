@@ -4,10 +4,42 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./css/style.css">
   <title>Todo List App</title>
 </head>
 <body>
+  <div class="header">
+    <div class="header__date">Monday, 30.6.2021</div>
+  </div>
+  <div class="container">
+    <div class="add_todo">
+      <input type="text" placeholder="Add Todo" class="add_todo__input">
+      <input type="submit" value="ADD" class="add_todo__btn">
+    </div>
+    <div class="todo_list">
+      <div class="todo_list__btns">
+        <a href="#" class="btn btn--active">TO DO</a>
+        <a href="#" class="btn btn--inactive">DONE</a>
+      </div>
+      <div class="todo_list__items">
+        <!-- Item -->
+        <div class="todo_list__item">
+          <div class="item_text">
+            <input type="checkbox" name="item1" id="item1">
+            <label for="item1">This is todo item 1</label>
+          </div>
+          <div class="item__action_btns">
+            <a href="#" class="btn--edit"><i class="fas fa-pen"></i></a>
+          <a href="#" class="btn--delete"><i class="fas fa-trash-alt"></i></a>
+          </div>
+        </div>
+        <!-- End of Item -->
+      </div>
+    </div>
+  </div>
   
   <script src="./main.js" defer></script>
 </body>
