@@ -73,23 +73,26 @@
         font-size: 22px;
         text-decoration: none;
         padding-bottom: 20px;
-        
-        &:first-child {
-          padding-right: 20px;
+        font-weight: normal;
+        color: var(--secondary-color);
+        padding-right: 20px;
           padding-left: 20px;
           margin-right: 20px;
-        }
-
+          
         &--active {
           font-weight: bold;
           color: var(--primary-color);
           border-bottom: 5px solid;
         }
+        
+      }
+    }
 
-        &--inactive {
-          font-weight: normal;
-          color: var(--secondary-color);
-        }
+    &__items {
+      display: none;
+
+      &.active {
+        display: block;
       }
     }
 

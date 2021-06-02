@@ -12,7 +12,7 @@
 </head>
 <body>
   <div class="header">
-    <div class="header__date">Monday, 30.6.2021</div>
+    <div class="header__date"></div>
   </div>
   <div class="container">
     <div class="add_todo">
@@ -21,22 +21,45 @@
     </div>
     <div class="todo_list">
       <div class="todo_list__btns">
-        <a href="#" class="btn btn--active">TO DO</a>
-        <a href="#" class="btn btn--inactive">DONE</a>
+        <a href="#" class="btn btn--active" data-id="active">TO DO</a>
+        <a href="#" class="btn" data-id="finished">DONE</a>
       </div>
-      <div class="todo_list__items">
-        <!-- Item -->
+      <!-- Active Todo's -->
+      <div class="todo_list__items active" id="active">
         <div class="todo_list__item">
           <div class="item_text">
-            <input type="checkbox" name="item1" id="item1">
-            <label for="item1">This is todo item 1</label>
-          </div>
-          <div class="item__action_btns">
+            <input type="checkbox" name="1" id="1">
+            <label for="1">${val}</label>
+            </div>
+            <div class="item__action_btns">
             <a href="#" class="btn--edit"><i class="fas fa-pen"></i></a>
-          <a href="#" class="btn--delete"><i class="fas fa-trash-alt"></i></a>
-          </div>
+            <a href="#" class="btn--delete"><i class="fas fa-trash-alt"></i></a>
+            </div>
         </div>
-        <!-- End of Item -->
+        <div class="todo_list__item">
+          <div class="item_text">
+            <input type="checkbox" name="2" id="2">
+            <label for="2">${val}</label>
+            </div>
+            <div class="item__action_btns">
+            <a href="#" class="btn--edit"><i class="fas fa-pen"></i></a>
+            <a href="#" class="btn--delete"><i class="fas fa-trash-alt"></i></a>
+            </div>
+        </div>
+        <div class="todo_list__item">
+          <div class="item_text">
+            <input type="checkbox" name="3" id="3">
+            <label for="3">${val}</label>
+            </div>
+            <div class="item__action_btns">
+            <a href="#" class="btn--edit"><i class="fas fa-pen"></i></a>
+            <a href="#" class="btn--delete"><i class="fas fa-trash-alt"></i></a>
+            </div>
+        </div>
+      </div>
+      <!-- Finished Todo's -->
+      <div class="todo_list__items" id="finished">
+        <h1>finished</h1>
       </div>
     </div>
   </div>
