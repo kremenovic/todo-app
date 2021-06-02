@@ -37,12 +37,14 @@ const addTodo = (e) => {
     setBackToDefault();
     removeTodoElement();
   }
+
 }
 
 // CREATE TODO ELEMENT
 const createTodoElement = (val, id) => {
   let item = document.createElement("div");
   item.classList.add("todo_list__item");
+  item.setAttribute("data-status", "false");
   let item_content = `<div class="item_text">
   <input type="checkbox" name="${id}" id="${id}">
   <label for="${id}">${val}</label>
@@ -69,7 +71,7 @@ const removeTodoElement = () => {
 
 // EDIT TODO ELEMENT
 const editTodoElement = () => {
-  
+ 
 }
 
 // SET BACK TO DEFAULT
@@ -105,6 +107,7 @@ const displayTodos = (e) => {
 document.addEventListener("DOMContentLoaded", () => {
   updateHeaderDate();
   removeTodoElement();
+  editTodoElement();
 })
 
 todo_btn.addEventListener("click", addTodo);
