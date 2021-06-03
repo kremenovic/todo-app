@@ -8,7 +8,7 @@ const todoItems = document.querySelector(".todo_list");
 const activeTodoItems = document.getElementById("active");
 const finishedTodoItems = document.getElementById("finished");
 
-let items_array = [];
+let saveTodo = [];
 
 // CHANGE DATE
 const updateHeaderDate = () => {
@@ -35,7 +35,8 @@ let edit_element;
 const addTodo = (e) => {
   e.preventDefault();
   let value = todo_input.value;
-
+  saveTodo.push(value);
+  
   if (value !== "" && !edit_status) {
     // create element
     let itemID = todo_id++;
@@ -60,8 +61,7 @@ const addTodo = (e) => {
     deleteBtn.addEventListener("click", removeTodoElement);
     // append create el. to active todo
     activeTodoItems.appendChild(item);
-    items_array.push({id: itemID, value});
-    addToLocalStorage(itemID, value);
+    addToLocalStorage();
     setBackToDefault();
   } else if (value !== "" && edit_status) {
     edit_element.innerHTML = value;
@@ -93,7 +93,7 @@ const editTodoElement = e => {
     todo_btn.value = "EDIT";
   } else {
     e.currentTarget.setAttribute("disabled", "disabled");
-    notificationMessage("warning", "You cannot edit finished todo item", 4000);
+    notificationMessage("warning", "You cannot edit finished todo item", 1500);
   }
   
 }
@@ -157,14 +157,25 @@ const notificationMessage = (validation, message, animationTime) => {
 
 // LOCAL STORAGE
 // add to LS
-const addToLocalStorage = (id, value) => {
-  localStorage.setItem("activeTodos", JSON.stringify(items_array));
+const addToLocalStorage = () => {
+  localStorage.setItem("activeTodos", JSON.stringify(saveTodo));
+}
+
+// remove from LS
+const removeFromLocalStorage = (id) => {
+  localStorage.removeItem()
+}
+
+// get from LS
+const getFromLocalStorage = () => {
   
 }
 
 // EVENT LISTENERS
 document.addEventListener("DOMContentLoaded", () => {
   updateHeaderDate();
+  getFromLocalStorage();
+  
 })
 
 todo_btn.addEventListener("click", addTodo);
