@@ -84,6 +84,9 @@ const createNewElement = (id, value, status) => {
 const removeTodoElement = e => {
   e.preventDefault();
   let element = e.currentTarget.parentElement.parentElement;
+  let elementsId = parseInt(element.dataset.id);
+  // console.log(elementsId);
+  removeFromLocalStorage(elementsId);
   element.remove();
   notificationMessage("warning", "Item successfully deleted", 1500);
 }
@@ -112,7 +115,7 @@ const checkTodoDone = e => {
 
   if(element.checked) {
     item.setAttribute("data-status", "true");
-    finishedTodoItems.appendChild(item);
+    finishedTodoItems.appendChild(item).join("");
     notificationMessage("success", "Todo item marked as done", 1500);
   } else {
     item.setAttribute("data-status", "false");
@@ -170,14 +173,21 @@ const addToLocalStorage = () => {
 
 // remove from LS
 const removeFromLocalStorage = (id) => {
-  localStorage.removeItem()
+  let getTodos = JSON.parse(localStorage.getItem("activeTodos"));
+  savedActiveTodos = getTodos;
+  let filterTodos = savedActiveTodos.filter(todos => todos.id !== id);
+  savedActiveTodos = filterTodos;
+  localStorage.setItem("activeTodos", JSON.stringify(savedActiveTodos));
 }
 
 // edit in LS
+const editLocalStorage = (id, value) => {
+
+}
 
 // get from LS
 const getFromLocalStorage = () => {
-  let getItems = JSON.parse(localStorage.getItem("activeTodos"))
+  let getItems = JSON.parse(localStorage.getItem("activeTodos"));
   
   if(getItems === null) {
     localStorage.setItem("activeTodos", JSON.stringify(savedActiveTodos));
@@ -195,6 +205,14 @@ const loadTodos = () => {
   }).join("");
 
   // finished todos
+
+  // this will force todo_id to count from greatest id in LS
+  let getMaxID = Math.max.apply(Math, getActiveTodos.map(max => {
+    return max.id;
+  }));
+  if (getActiveTodos.length > 0) {
+    todo_id = getMaxID + 1;
+  }
   
 }
 
@@ -213,8 +231,6 @@ filterBtns.forEach(btn => {
 
 /*
 
-popraviti cuvanje IDova u local storage
-napraviti delete from local storage 
 napraviti edit local storage gdje se mjenja status true/false i mjenja se value
 napraviti da loaduje finished todos iz local storage
 
