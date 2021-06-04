@@ -8,26 +8,29 @@ const todoItems = document.querySelector(".todo_list");
 const activeTodoItems = document.getElementById("active");
 const finishedTodoItems = document.getElementById("finished");
 
-let saveTodo = [];
+let savedActiveTodos = [];
+let savedFinishedTodos = [];
 
 // CHANGE DATE
 const updateHeaderDate = () => {
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
   let new_date = new Date ();
   let day = new_date.getDay();
+  let month = new_date.getMonth();
   let week_day = days[day];
   let dd = String(new_date.getDate());
-  let mm = String(new_date.getMonth() + 1);
+  let mm = months[month];
   let yyyy = String(new_date.getFullYear());
 
-  header_date.innerHTML = `${week_day}, ${dd}.${mm}.${yyyy}`
+  header_date.innerHTML = `${week_day}, ${mm} ${dd}, ${yyyy}`
   
 }
 
 // ADD TODO 
 let todo_id = null;
-let todo_status = false;
+let todo_status = "false";
 let edit_status = false;
 let edit_id = "";
 let edit_element;
@@ -35,42 +38,46 @@ let edit_element;
 const addTodo = (e) => {
   e.preventDefault();
   let value = todo_input.value;
-  saveTodo.push(value);
-  
+
   if (value !== "" && !edit_status) {
     // create element
     let itemID = todo_id++;
-    let item = document.createElement("div");
-    item.classList.add("todo_list__item");
-    item.setAttribute("data-status", "false");
-    item.setAttribute("data-id", itemID);
-    item.innerHTML = `<div class="item_text">
-    <input type="checkbox" name="${itemID}" id="${itemID}">
-    <label for="${itemID}">${value}</label>
-    </div>
-    <div class="item__action_btns">
-    <button class="btn--edit"><i class="fas fa-pen"></i></button>
-    <button class="btn--delete"><i class="fas fa-trash-alt"></i></button>
-    </div>`;
-    // add event listeners to delete & edit btns
-    const checkDone = item.querySelector("input");
-    const editBtn = item.querySelector(".btn--edit");
-    const deleteBtn = item.querySelector(".btn--delete");
-    checkDone.addEventListener("click", checkTodoDone);
-    editBtn.addEventListener("click", editTodoElement);
-    deleteBtn.addEventListener("click", removeTodoElement);
-    // append create el. to active todo
-    activeTodoItems.appendChild(item);
+    createNewElement(itemID, value, todo_status);
+    savedActiveTodos.push({id: itemID, value, status: "false"});
     addToLocalStorage();
     setBackToDefault();
   } else if (value !== "" && edit_status) {
     edit_element.innerHTML = value;
     notificationMessage("success", "Item successfully updated", 1500);
     setBackToDefault();
-  } else {
+  } else if (value === "") {
     console.log("empty");
   }
+}
 
+// CREATE NEW ELEMENT
+const createNewElement = (id, value, status) => {
+  let item = document.createElement("div");
+  item.classList.add("todo_list__item");
+  item.setAttribute("data-status", status);
+  item.setAttribute("data-id", id);
+  item.innerHTML = `<div class="item_text">
+  <input type="checkbox" name="${id}" id="${id}">
+  <label for="${id}">${value}</label>
+  </div>
+  <div class="item__action_btns">
+  <button class="btn--edit"><i class="fas fa-pen"></i></button>
+  <button class="btn--delete"><i class="fas fa-trash-alt"></i></button>
+  </div>`;
+  // add event listeners to delete & edit btns
+  const checkDone = item.querySelector("input");
+  const editBtn = item.querySelector(".btn--edit");
+  const deleteBtn = item.querySelector(".btn--delete");
+  checkDone.addEventListener("click", checkTodoDone);
+  editBtn.addEventListener("click", editTodoElement);
+  deleteBtn.addEventListener("click", removeTodoElement);
+  // append create el. to active todo
+  activeTodoItems.appendChild(item);
 }
 
 // REMOVE TODO ELEMENT
@@ -158,7 +165,7 @@ const notificationMessage = (validation, message, animationTime) => {
 // LOCAL STORAGE
 // add to LS
 const addToLocalStorage = () => {
-  localStorage.setItem("activeTodos", JSON.stringify(saveTodo));
+  localStorage.setItem("activeTodos", JSON.stringify(savedActiveTodos));
 }
 
 // remove from LS
@@ -166,8 +173,28 @@ const removeFromLocalStorage = (id) => {
   localStorage.removeItem()
 }
 
+// edit in LS
+
 // get from LS
 const getFromLocalStorage = () => {
+  let getItems = JSON.parse(localStorage.getItem("activeTodos"))
+  
+  if(getItems === null) {
+    localStorage.setItem("activeTodos", JSON.stringify(savedActiveTodos));
+  } else if (getItems.length > 0) {
+    savedActiveTodos = getItems;
+  }
+}
+
+// LOAD ITEMS FROM LS
+const loadTodos = () => {
+  // active todos
+  let getActiveTodos = savedActiveTodos.filter(activeTodos => activeTodos.status === "false");
+  let showActiveTodos = getActiveTodos.map(todos => {
+    createNewElement(todos.id, todos.value, todos.status);
+  }).join("");
+
+  // finished todos
   
 }
 
@@ -175,7 +202,7 @@ const getFromLocalStorage = () => {
 document.addEventListener("DOMContentLoaded", () => {
   updateHeaderDate();
   getFromLocalStorage();
-  
+  loadTodos();
 })
 
 todo_btn.addEventListener("click", addTodo);
@@ -183,3 +210,12 @@ todo_btn.addEventListener("click", addTodo);
 filterBtns.forEach(btn => {
   btn.addEventListener("click", displayTodos);
 })
+
+/*
+
+popraviti cuvanje IDova u local storage
+napraviti delete from local storage 
+napraviti edit local storage gdje se mjenja status true/false i mjenja se value
+napraviti da loaduje finished todos iz local storage
+
+*/
