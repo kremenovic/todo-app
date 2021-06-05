@@ -34,25 +34,6 @@
   width: 100%;
   padding: 30px 60px;
 
-  .notification {
-    display: none;
-    padding: 10px;
-    color: #fff;
-    text-align: center;
-    width: 500px;
-    margin: 0px auto 20px auto;
-
-    &.success {
-      background: #4BB543;
-      display: block;
-    }
-
-    &.warning {
-      background: #D9200A;
-      display: block;
-    }
-  }
-
   .add_todo {
     display: flex;
     padding-bottom: 20px;
@@ -81,6 +62,10 @@
   }
 
   .todo_list {
+
+    #finished > .todo_list__item > .item__action_btns .btn--edit {
+      display: none;
+    }
 
     &__btns {
       display: flex;
@@ -156,9 +141,24 @@
 
         .btn--edit {
           margin-right: 20px;
-
         }
       }
     }
+  }
+}
+
+@media only screen and (max-width: 540px) {
+  .header {
+    padding: 0px 20px 40px 20px;
+  
+    &__date {
+      font-size: 36px;
+      color: #fff;
+      font-weight: 600;
+    }
+  }
+
+  .container {
+    padding: 30px 20px;
   }
 }

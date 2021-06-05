@@ -40,25 +40,6 @@
   padding: 30px 60px;
 }
 
-.container .notification {
-  display: none;
-  padding: 10px;
-  color: #fff;
-  text-align: center;
-  width: 500px;
-  margin: 0px auto 20px auto;
-}
-
-.container .notification.success {
-  background: #4BB543;
-  display: block;
-}
-
-.container .notification.warning {
-  background: #D9200A;
-  display: block;
-}
-
 .container .add_todo {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -86,6 +67,10 @@
   font-size: 22px;
   padding: 0 35px;
   border-radius: 3px;
+}
+
+.container .todo_list #finished > .todo_list__item > .item__action_btns .btn--edit {
+  display: none;
 }
 
 .container .todo_list__btns {
@@ -173,5 +158,19 @@
 
 .container .todo_list__item .item__action_btns .btn--edit {
   margin-right: 20px;
+}
+
+@media only screen and (max-width: 540px) {
+  .header {
+    padding: 0px 20px 40px 20px;
+  }
+  .header__date {
+    font-size: 36px;
+    color: #fff;
+    font-weight: 600;
+  }
+  .container {
+    padding: 30px 20px;
+  }
 }
 /*# sourceMappingURL=style.css.map */

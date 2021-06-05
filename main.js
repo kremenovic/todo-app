@@ -9,7 +9,7 @@ const activeTodoItems = document.getElementById("active");
 const finishedTodoItems = document.getElementById("finished");
 
 let savedActiveTodos = [];
-let savedFinishedTodos = [];
+let allTodos = [];
 
 // CHANGE DATE
 const updateHeaderDate = () => {
@@ -42,14 +42,13 @@ const addTodo = (e) => {
   if (value !== "" && !edit_status) {
     // create element
     let itemID = todo_id++;
-    createNewElement(itemID, value, todo_status);
+    createNewElement(itemID, value, todo_status, activeTodoItems);
     savedActiveTodos.push({id: itemID, value, status: "false"});
     addToLocalStorage();
     setBackToDefault();
   } else if (value !== "" && edit_status) {
     edit_element.innerHTML = value;
     editLocalStorage(edit_id, value);
-    notificationMessage("success", "Item successfully updated", 1500);
     setBackToDefault();
   } else if (value === "") {
     console.log("empty");
@@ -57,7 +56,7 @@ const addTodo = (e) => {
 }
 
 // CREATE NEW ELEMENT
-const createNewElement = (id, value, status) => {
+const createNewElement = (id, value, status, todoPlacement) => {
   let item = document.createElement("div");
   item.classList.add("todo_list__item");
   item.setAttribute("data-status", status);
@@ -78,7 +77,7 @@ const createNewElement = (id, value, status) => {
   editBtn.addEventListener("click", editTodoElement);
   deleteBtn.addEventListener("click", removeTodoElement);
   // append create el. to active todo
-  activeTodoItems.appendChild(item);
+  todoPlacement.appendChild(item);
 }
 
 // REMOVE TODO ELEMENT
@@ -89,7 +88,6 @@ const removeTodoElement = e => {
   // console.log(elementsId);
   removeFromLocalStorage(elementsId);
   element.remove();
-  notificationMessage("warning", "Item successfully deleted", 1500);
 }
 
 // EDIT TODO ELEMENT
@@ -104,25 +102,25 @@ const editTodoElement = e => {
     todo_btn.value = "EDIT";
   } else {
     e.currentTarget.setAttribute("disabled", "disabled");
-   // notificationMessage("warning", "You cannot edit finished todo item", 1500);
   }
-  
 }
 
 // CHECK TODO ELEMENT AS DONE
 const checkTodoDone = e => {
   let element = e.currentTarget;
   let item = element.parentElement.parentElement;
-
+  let itemValue = element.nextElementSibling.innerHTML;
+  console.log(itemValue);
+  let itemID = item.dataset.id;
   if(element.checked) {
     item.setAttribute("data-status", "true");
-    element.disabled = true;
     finishedTodoItems.appendChild(item);
-   //notificationMessage("success", "Todo item marked as done", 1500);
+    editLocalStorage(itemID, itemValue, "true");
   } else {
     item.setAttribute("data-status", "false");
     activeTodoItems.appendChild(item);
-   // notificationMessage("success", "Todo item marked as not done yet", 1500);
+    editLocalStorage(itemID, itemValue, "false");
+    sortTodoItems();
   }
   
 }
@@ -157,15 +155,6 @@ const displayTodos = (e) => {
   }
 }
 
-// NOTIFICATION MESSAGE
-const notificationMessage = (validation, message, animationTime) => {
-  notification.classList.add(`${validation}`);
-  notification.innerHTML = `${message}`;
-  setTimeout(function () {
-    notification.classList.remove(`${validation}`);
-    notification.innerHTML = "";
-  }, animationTime);
-}
 
 // LOCAL STORAGE
 // add to LS
@@ -183,7 +172,8 @@ const removeFromLocalStorage = (id) => {
 }
 
 // edit in LS
-const editLocalStorage = (id, value) => {
+const editLocalStorage = (id, value, status) => {
+  status = status || "false";
   let myID = parseInt(id);
   let getTodos = JSON.parse(localStorage.getItem("activeTodos"));
   savedActiveTodos = getTodos;
@@ -191,7 +181,7 @@ const editLocalStorage = (id, value) => {
   // find index of item in array using id
   const findID = savedActiveTodos.findIndex(todo => todo.id === myID);
   // create new object of updated one
-  const updateTodo = {... savedActiveTodos[findID], value};
+  const updateTodo = {... savedActiveTodos[findID], value, status};
   // create new array with updated object
   const updateSavedTodos = [
     ...savedActiveTodos.slice(0, findID),
@@ -218,19 +208,51 @@ const loadTodos = () => {
   // active todos
   let getActiveTodos = savedActiveTodos.filter(activeTodos => activeTodos.status === "false");
   let showActiveTodos = getActiveTodos.map(todos => {
-    createNewElement(todos.id, todos.value, todos.status);
+    createNewElement(todos.id, todos.value, todos.status, activeTodoItems);
   }).join("");
 
   // finished todos
+  let getFinishedTodos = savedActiveTodos.filter(finishedTodos => finishedTodos.status === "true");
+  let showFinishedTodos = getFinishedTodos.map(todos => {
+    createNewElement(todos.id, todos.value, todos.status, finishedTodoItems);
+  }).join("");
 
   // this will force todo_id to count from greatest id in LS
-  let getMaxID = Math.max.apply(Math, getActiveTodos.map(max => {
+  let getAllTodos =  JSON.parse(localStorage.getItem("activeTodos"));
+  let getMaxID = Math.max.apply(Math, getAllTodos.map(max => {
     return max.id;
   }));
-  if (getActiveTodos.length > 0) {
+  if (getAllTodos.length > 0) {
     todo_id = getMaxID + 1;
   }
-  
+}
+
+// SORT TODO ELEMENTS BY ID
+const sortTodoItems = () => {
+  let getItems = activeTodoItems.querySelectorAll(".todo_list__item");
+  let items = [];
+  for (let i = 0; i < getItems.length; i++) {
+    items.push(getItems[i]);
+  }
+  items.sort(function(min, max) {
+    return min.dataset.id.localeCompare(max.dataset.id);
+  })
+  items.forEach(item => {
+    activeTodoItems.appendChild(item);
+  })
+}
+
+// FIX FINISHED TODOS ON LOAD 
+const fixFinishedTodos = () => {
+  let getItems = finishedTodoItems.querySelectorAll(".todo_list__item");
+  let items = [];
+  for (let i = 0; i < getItems.length; i++) {
+    items.push(getItems[i]);
+  }
+  items.forEach(item => {
+    let inputItem = item.querySelector("input");
+    inputItem.setAttribute("checked", "checked");
+  })
 }
 
 // EVENT LISTENERS
@@ -238,6 +260,8 @@ document.addEventListener("DOMContentLoaded", () => {
   updateHeaderDate();
   getFromLocalStorage();
   loadTodos();
+  sortTodoItems();
+  fixFinishedTodos();
 })
 
 todo_btn.addEventListener("click", addTodo);
@@ -245,10 +269,3 @@ todo_btn.addEventListener("click", addTodo);
 filterBtns.forEach(btn => {
   btn.addEventListener("click", displayTodos);
 })
-
-/*
-
-napraviti edit local storage gdje se mjenja status true/false i mjenja se value
-napraviti da loaduje finished todos iz local storage
-
-*/
