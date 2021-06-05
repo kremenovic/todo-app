@@ -48,6 +48,7 @@ const addTodo = (e) => {
     setBackToDefault();
   } else if (value !== "" && edit_status) {
     edit_element.innerHTML = value;
+    editLocalStorage(edit_id, value);
     notificationMessage("success", "Item successfully updated", 1500);
     setBackToDefault();
   } else if (value === "") {
@@ -103,7 +104,7 @@ const editTodoElement = e => {
     todo_btn.value = "EDIT";
   } else {
     e.currentTarget.setAttribute("disabled", "disabled");
-    notificationMessage("warning", "You cannot edit finished todo item", 1500);
+   // notificationMessage("warning", "You cannot edit finished todo item", 1500);
   }
   
 }
@@ -115,12 +116,13 @@ const checkTodoDone = e => {
 
   if(element.checked) {
     item.setAttribute("data-status", "true");
-    finishedTodoItems.appendChild(item).join("");
-    notificationMessage("success", "Todo item marked as done", 1500);
+    element.disabled = true;
+    finishedTodoItems.appendChild(item);
+   //notificationMessage("success", "Todo item marked as done", 1500);
   } else {
     item.setAttribute("data-status", "false");
     activeTodoItems.appendChild(item);
-    notificationMessage("success", "Todo item marked as not done yet", 1500);
+   // notificationMessage("success", "Todo item marked as not done yet", 1500);
   }
   
 }
@@ -182,7 +184,22 @@ const removeFromLocalStorage = (id) => {
 
 // edit in LS
 const editLocalStorage = (id, value) => {
-
+  let myID = parseInt(id);
+  let getTodos = JSON.parse(localStorage.getItem("activeTodos"));
+  savedActiveTodos = getTodos;
+  
+  // find index of item in array using id
+  const findID = savedActiveTodos.findIndex(todo => todo.id === myID);
+  // create new object of updated one
+  const updateTodo = {... savedActiveTodos[findID], value};
+  // create new array with updated object
+  const updateSavedTodos = [
+    ...savedActiveTodos.slice(0, findID),
+    updateTodo,
+    ...savedActiveTodos.slice(findID + 1)
+  ];
+  savedActiveTodos = updateSavedTodos;
+  localStorage.setItem("activeTodos", JSON.stringify(savedActiveTodos));
 }
 
 // get from LS
