@@ -114,11 +114,15 @@ const checkTodoDone = e => {
   let itemID = item.dataset.id;
   if(element.checked) {
     item.setAttribute("data-status", "true");
-    finishedTodoItems.appendChild(item);
+    setTimeout(function () {
+      finishedTodoItems.appendChild(item);
+    }, 200);
     editLocalStorage(itemID, itemValue, "true");
   } else {
     item.setAttribute("data-status", "false");
-    activeTodoItems.appendChild(item);
+    setTimeout(function () {
+      activeTodoItems.appendChild(item);
+    }, 200);
     editLocalStorage(itemID, itemValue, "false");
     sortTodoItems();
   }
