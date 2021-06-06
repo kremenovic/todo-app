@@ -63,7 +63,7 @@ const createNewElement = (id, value, status, todoPlacement) => {
   item.setAttribute("data-id", id);
   item.innerHTML = `<div class="item_text">
   <input type="checkbox" name="${id}" id="${id}">
-  <label for="${id}">${value}</label>
+  <label>${value}</label>
   </div>
   <div class="item__action_btns">
   <button class="btn--edit"><i class="fas fa-pen"></i></button>
