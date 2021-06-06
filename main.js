@@ -122,7 +122,6 @@ const checkTodoDone = e => {
     editLocalStorage(itemID, itemValue, "false");
     sortTodoItems();
   }
-  
 }
 
 // SET BACK TO DEFAULT
@@ -154,7 +153,6 @@ const displayTodos = (e) => {
     finishedTodoItems.classList.add("active");
   }
 }
-
 
 // LOCAL STORAGE
 // add to LS
