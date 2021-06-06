@@ -162,3 +162,11 @@
     padding: 30px 20px;
   }
 }
+
+@media only screen and (max-width: 540px) {
+  .header {
+    &__date {
+      font-size: 26px;
+    }
+  }
+}

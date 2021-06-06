@@ -173,4 +173,10 @@
     padding: 30px 20px;
   }
 }
+
+@media only screen and (max-width: 540px) {
+  .header__date {
+    font-size: 26px;
+  }
+}
 /*# sourceMappingURL=style.css.map */
